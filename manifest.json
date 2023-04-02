@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-properties-coloration-plugin",
-	"name": "Properties Coloration",
+	"name": "Properties & Yaml Coloration",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "This plugin add a simple coloration to properties file markdown block",
+	"description": "This plugin add a simple coloration to properties & yaml file markdown block",
 	"author": "Adam Souquieres",
 	"isDesktopOnly": false
 }

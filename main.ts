@@ -16,6 +16,9 @@ export default class PropertyColorationPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
+
+		const markdownView = this.app.workspace.activeEditor?.editor?.getDoc().getLine(1);
+			
 	    this.registerMarkdownCodeBlockProcessor("properties", (source, el, ctx) => {
 			const rows = source.split("\n").filter((row) => row.length > 0);
 
@@ -45,6 +48,57 @@ export default class PropertyColorationPlugin extends Plugin {
 			  keySpan.style.color = this.settings.keyColor;
 
 			  separatorSpan.textContent = "=";
+
+			  valueSpan.textContent = value;
+			  valueSpan.style.color = this.settings.valueColor;
+			}
+		  });
+
+		  this.registerMarkdownCodeBlockProcessor("yaml", (source, el, ctx) => {
+			const rows = source.split("\n").filter((row) => row.length > 0);
+
+
+			for (let i = 0; i < rows.length; i++) {
+
+
+			
+			  const htmlRow = rows[i].replace(/\t| {2}/g, "\u00A0\u00A0\u00A0\u00A0");
+			  const propDiv = el.createDiv();
+			
+			  console.log("parsed line: " + rows[i]);
+
+              if(rows[i].startsWith("#") || rows[i].startsWith("---")) {
+				propDiv.style.color="grey"
+				propDiv.textContent = htmlRow;
+				continue; 
+			  }
+
+			  if(rows[i].endsWith(":")) {
+				propDiv.style.color=this.settings.keyColor;
+				propDiv.textContent = htmlRow;
+				continue; 
+			  }
+
+			  if(!rows[i].includes(":")) {
+				propDiv.style.color=this.settings.valueColor;
+				propDiv.textContent = htmlRow;
+
+				continue; 
+			  }
+
+			  const cols = htmlRow.split(":");
+
+			  const id = cols[0]
+			  const value = cols[1]
+
+			  const keySpan = propDiv.createSpan();
+			  const separatorSpan = propDiv.createSpan();
+			  const valueSpan = propDiv.createSpan();
+
+			  keySpan.textContent = id;
+			  keySpan.style.color = this.settings.keyColor;
+
+			  separatorSpan.textContent = ":";
 
 			  valueSpan.textContent = value;
 			  valueSpan.style.color = this.settings.valueColor;
